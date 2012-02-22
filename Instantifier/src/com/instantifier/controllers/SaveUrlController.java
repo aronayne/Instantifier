@@ -11,6 +11,9 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+
 import java.util.Date;
 
 @Controller
@@ -29,16 +32,28 @@ public class SaveUrlController {
   }
   
   @RequestMapping(value = "/getallurls", method = RequestMethod.GET)
-  public @ResponseBody String getUrls() {		
-    return "{\"name\":\"Product\"}";
+  public @ResponseBody String getUrls() throws EntityNotFoundException {		
+	  
+	    Key key = KeyFactory.createKey("jsonString", "jsonString");
+	    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	    
+	    Entity entity = datastore.get(key);
+	    String urlValInDB = (String)entity.getProperty("urlVal");
+	    
+    return "here";
   }
-  
+   
   @RequestMapping(value = "/addUrl", method = RequestMethod.GET)
   public @ResponseBody String getUrl(@RequestParam String urlVal) {		
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Entity urlEntity = new Entity("URLVal");
+    
+    Key key = KeyFactory.createKey("jsonString", "jsonString");
+    Entity urlEntity = new Entity("jsonString" , key);
     urlEntity.setProperty("urlVal", urlVal);
+
     com.google.appengine.api.datastore.Key urlEntityKey = datastore.put(urlEntity);   
+
+
     Entity entity = null;
     try {
 		entity = datastore.get(urlEntityKey);

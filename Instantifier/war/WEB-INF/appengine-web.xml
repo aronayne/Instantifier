@@ -32,8 +32,8 @@
 
 <static-files>
   <include path="/js/jquery-1.7.js" />
-  <include path="images/**.*" />
    <include path="/css/**.css" />
+   <include path="/images/**.*" />
 </static-files>
     
 </appengine-web-app>

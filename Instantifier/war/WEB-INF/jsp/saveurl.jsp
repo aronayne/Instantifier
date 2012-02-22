@@ -21,24 +21,26 @@
     }
 
     function addUrlAjax() {
-      $('#urlTextboxDiv').html("Please wait");
+    $('#addUrlTable > tbody:last').append('<td id = \'myTD\'><img src=\'/images/ajax-loader.gif\'/></td>');
+
       $.ajax({
         url: 'addUrl',
         data: ({urlVal : $('#urlVal').val()}),
         success: function(data) {
         //	$("#rounded-corner tr:first").after('<tr><td>'+data+'</td></tr>'');
-     	 $('#rounded-corner > tbody:last').prepend('<tr><td>'+data+'</td><td></td><td></td><td></td></tr>');
+     	 $('#rounded-corner > tbody:last').prepend('<tr><td>'+data+'</td><td></td><td></td><td></td><td></td></tr>');
+     	$('#myTD').remove();
         }
       });
     }
     
     $(document).ready(function() {
-        $.ajax({
+         $.ajax({
             url: 'getallurls',
             data: ({urlVal : $('#urlVal').val()}),
             success: function(data) {
             var jsonObj = jQuery.parseJSON(data);
-         	 $('#rounded-corner > tbody:last').prepend('<tr><td>'+jsonObj.name+'</td><td></td><td></td><td></td></tr>');
+         	 $('#rounded-corner > tbody:last').prepend('<tr><td>'+jsonObj.name+'</td><td></td><td></td><td></td><td></td></tr>');
             }
           });
     	});
@@ -55,8 +57,14 @@ ${message}
 -->
 <center>
 
+<table id="addUrlTable">
+<td>
 <input type="text" id="urlVal"  >
+</td>
+<td>
 <button id="addUrlButton" onclick="addUrlAjax()" title="Button">AddUrl</button>
+</td>
+</table>
 
 <table id="rounded-corner" summary="2007 Major IT Companies' Profit">
 
@@ -69,6 +77,8 @@ ${message}
             <th scope="col" class="rounded-q1">Name</th>
 
             <th scope="col" class="rounded-q2">Description</th>
+            
+             <th scope="col" class="rounded-q2">Category</th>
 
             <th scope="col" class="rounded-q3">Date Added</th>
 
@@ -80,7 +90,7 @@ ${message}
 
     	<tr>
 
-        	<td colspan="3" class="rounded-foot-left"><em></em></td>
+        	<td colspan="4" class="rounded-foot-left"><em></em></td>
 
         	<td class="rounded-foot-right">&nbsp;</td>
 
@@ -110,7 +120,8 @@ ${message}
 
 </table>
 
-</table>
+<img src="/images/filter.jpeg"/>
+<img src="/images/add.jpeg"/>
 </center>
 
 </body>
