@@ -26,7 +26,7 @@ public class SaveUrlController {
   public ModelAndView helloWorld() {
     return new ModelAndView("saveurl", "message", "");
   }
- 
+  
   @RequestMapping(value = "/time", method = RequestMethod.GET)
   public @ResponseBody String getTime(@RequestParam String name) {
     String result = "Time for " + name + " is " + new Date().toString();
