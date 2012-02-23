@@ -20,6 +20,8 @@ import java.util.Date;
 public class SaveUrlController {
 
 	
+	private static final String KEY_NAME = "FSDFA";
+	
   @RequestMapping("/saveurl")
   public ModelAndView helloWorld() {
     return new ModelAndView("saveurl", "message", "");
@@ -33,36 +35,33 @@ public class SaveUrlController {
   
   @RequestMapping(value = "/getallurls", method = RequestMethod.GET)
   public @ResponseBody String getUrls() throws EntityNotFoundException {		
-	  
-	    Key key = KeyFactory.createKey("jsonString", "jsonString");
-	    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	    
-	    Entity entity = datastore.get(key);
-	    String urlValInDB = (String)entity.getProperty("urlVal");
-	    
-    return "here";
+    return this.getUrlJson();
   }
    
   @RequestMapping(value = "/addUrl", method = RequestMethod.GET)
   public @ResponseBody String getUrl(@RequestParam String urlVal) {		
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+    String json = "{\"url\":\"<a href=\'"+urlVal+"\'"+">"+urlVal+"</a>\"}";
     
-    Key key = KeyFactory.createKey("jsonString", "jsonString");
-    Entity urlEntity = new Entity("jsonString" , key);
-    urlEntity.setProperty("urlVal", urlVal);
+    Entity urlEntity = new Entity("json" , KEY_NAME);
+    urlEntity.setProperty("urlVal", json);
+  
+    datastore.put(urlEntity);   
 
-    com.google.appengine.api.datastore.Key urlEntityKey = datastore.put(urlEntity);   
 
-
-    Entity entity = null;
-    try {
-		entity = datastore.get(urlEntityKey);
-	} catch (EntityNotFoundException e) {
-	}    
-	String urlValInDB = (String)entity.getProperty("urlVal");
-
-    String json = "{\"url\":\"<a href=\""+urlValInDB+"\""+">"+urlValInDB+"</a>\"}";
+    
     return json;
+  }
+  
+  private String getUrlJson() throws EntityNotFoundException{
+	    Key key = KeyFactory.createKey("json", KEY_NAME);
+	    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	    
+	    Entity entity = datastore.get(key);
+	    String urlValInDB = (String)entity.getProperty("urlVal");
+	    
+	    return urlValInDB;
   }
   
 }
