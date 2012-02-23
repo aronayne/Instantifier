@@ -34,13 +34,16 @@
       });
     }
     
+    /*
+   	Calls spring controllers and outputs all URL's
+    */
     $(document).ready(function() {
          $.ajax({
             url: 'getallurls',
             data: ({urlVal : $('#urlVal').val()}),
             success: function(data) {
             var jsonObj = jQuery.parseJSON(data);
-         	 $('#rounded-corner > tbody:last').prepend('<tr><td>'+jsonObj.name+'</td><td></td><td></td><td></td><td></td></tr>');
+         	 $('#rounded-corner > tbody:last').prepend('<tr><td>'+jsonObj.url+'</td><td></td><td></td><td></td><td></td></tr>');
             }
           });
     	});
