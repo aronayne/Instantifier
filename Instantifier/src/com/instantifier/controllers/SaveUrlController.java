@@ -1,8 +1,6 @@
 package com.instantifier.controllers;
 
-/**
- * test comment
- */
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,15 +12,22 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class SaveUrlController {
 
-	
+	private static boolean isFirst = true;
 	private static final String KEY_NAME = "FSDFA";
 	
   @RequestMapping("/saveurl")
@@ -42,19 +47,28 @@ public class SaveUrlController {
   }
    
   @RequestMapping(value = "/addUrl", method = RequestMethod.GET)
-  public @ResponseBody String getUrl(@RequestParam String urlVal) {		
+  public @ResponseBody String getUrl(@RequestParam String urlVal) throws EntityNotFoundException {		
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-    String json = "{\"url\":\"<a href=\'"+urlVal+"\'"+">"+urlVal+"</a>\"}";
-    
+    if(isFirst){
+    	Entity urlEntity = new Entity("json" , KEY_NAME);
+    	urlEntity.setProperty("urlVal", "{ nodes:[ ] }");
+    	datastore.put(urlEntity);   
+    	isFirst = false;
+  }
+  
+    String currentJson = this.getUrlJson();
+    Container container = new Gson().fromJson(currentJson, Container.class);
+    UrlNodeDetails u = new UrlNodeDetails(urlVal , "");
+    container.nodes.add(u);
+
+    String updatedJson = new Gson().toJson(container);
     Entity urlEntity = new Entity("json" , KEY_NAME);
-    urlEntity.setProperty("urlVal", json);
+    urlEntity.setProperty("urlVal", updatedJson);
   
     datastore.put(urlEntity);   
-
-
     
-    return json;
+    return urlVal;
   }
   
   private String getUrlJson() throws EntityNotFoundException{
