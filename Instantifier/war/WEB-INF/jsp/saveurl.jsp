@@ -5,6 +5,7 @@
   
   <style type="text/css">
 @import url("css/style.css");
+@import url("css/complete.css");
 </style>
   
   <script type="text/javascript" src="js/jquery-1.7.js"></script>
@@ -26,7 +27,8 @@
 		                             		    "t",
 		                             		    "t",
 		                             		    "t",
-		                             		    "t"]
+		                             		   	"t",
+		                             		    "<button id=\"btnDeleteRow\">Delete</button>"]
 		                             		  );   
 		  
         }
@@ -56,7 +58,8 @@
       		                             		    "t",
       		                             		    "t",
       		                             		    "t",
-      		                             		    "t"]
+      		                             		 	"t",
+      		                             		 "<button id=\"btnDeleteRow\">Delete</button>"]
       		                             		  );   
             }
             }
@@ -84,14 +87,15 @@ ${message}
 </td>
 </table>
 
-<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+<table cellpadding="0" cellspacing="0" border="0" id="example" class="pretty">
 	<thead>
 		<tr>
-			<th>Rendering engine</th>
-			<th>Browser</th>
-			<th>Platform(s)</th>
-			<th>Engine version</th>
-			<th>CSS grade</th>
+			<th>URI</th>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Category</th>
+			<th>Date Added</th>
+			<th>Remove</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -99,11 +103,12 @@ ${message}
 	</tbody>
 	<tfoot>
 		<tr>
-			<th>Rendering engine</th>
-			<th>Browser</th>
-			<th>Platform(s)</th>
-			<th>Engine version</th>
-			<th>CSS grade</th>
+			<th>URI</th>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Category</th>
+			<th>Date Added</th>
+			<th>Remove</th>
 		</tr>
 	</tfoot>
 </table>

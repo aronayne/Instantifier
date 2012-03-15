@@ -1,0 +1,1 @@
+Implement remove functionality - refer to http://code.google.com/p/jquery-datatables-editable/wiki/DeleteRecord

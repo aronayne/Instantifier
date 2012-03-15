@@ -16,6 +16,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Text;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -28,10 +29,13 @@ import java.util.List;
 public class SaveUrlController {
 
 	private static boolean isFirst = true;
-	private static final String KEY_NAME = "FSDFA";
+	
+	//Using com.google.appengine.api.datastore.Text as google imposes a 500 char limit on String properties
+	Text datastoreJsonString = new Text("{ nodes:[ ] }");
+	private static final String KEY_NAME = "FSDFA3";
 	
   @RequestMapping("/saveurl")
-  public ModelAndView helloWorld() {
+  public ModelAndView doesthismethodnamematter() {
     return new ModelAndView("saveurl", "message", "");
   }
   
@@ -52,7 +56,7 @@ public class SaveUrlController {
 
     if(isFirst){
     	Entity urlEntity = new Entity("json" , KEY_NAME);
-    	urlEntity.setProperty("urlVal", "{ nodes:[ ] }");
+    	urlEntity.setProperty("urlVal", datastoreJsonString);
     	datastore.put(urlEntity);   
     	isFirst = false;
   }
@@ -62,9 +66,9 @@ public class SaveUrlController {
     UrlNodeDetails u = new UrlNodeDetails(urlVal , "");
     container.nodes.add(u);
 
-    String updatedJson = new Gson().toJson(container);
+    datastoreJsonString = new Text(new Gson().toJson(container));
     Entity urlEntity = new Entity("json" , KEY_NAME);
-    urlEntity.setProperty("urlVal", updatedJson);
+    urlEntity.setProperty("urlVal", datastoreJsonString);
   
     datastore.put(urlEntity);   
     
@@ -76,9 +80,9 @@ public class SaveUrlController {
 	    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	    
 	    Entity entity = datastore.get(key);
-	    String urlValInDB = (String)entity.getProperty("urlVal");
+	    Text urlValInDB = (Text)entity.getProperty("urlVal");
 	    
-	    return urlValInDB;
+	    return urlValInDB.getValue();
   }
   
 }
