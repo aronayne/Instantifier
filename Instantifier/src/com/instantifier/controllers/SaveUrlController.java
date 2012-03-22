@@ -28,12 +28,33 @@ import java.util.List;
 @Controller
 public class SaveUrlController {
 
-	private static boolean isFirst = true;
+	private static boolean isDeleteDataBetweenRestarts = false;
 	
 	//Using com.google.appengine.api.datastore.Text as google imposes a 500 char limit on String properties
-	Text datastoreJsonString = new Text("{ nodes:[ ] }");
+	private Text datastoreJsonString = new Text("{ nodes:[ ] }");
 	private static final String KEY_NAME = "FSDFA3";
 	
+	  @RequestMapping(value = "/removeData", method = RequestMethod.GET)
+	  public @ResponseBody String getData(@RequestParam String name) throws EntityNotFoundException {
+
+		    String currentJson = this.getUrlJson();
+		    UrlNodes container = new Gson().fromJson(currentJson, UrlNodes.class);
+		    
+		    UrlNodeDetails u = new UrlNodeDetails();
+		    u.setUrl(name);
+		    container.getNodes().remove(u);
+		    
+		    datastoreJsonString = new Text(new Gson().toJson(container));
+		    Entity urlEntity = new Entity("json" , KEY_NAME);
+		    urlEntity.setProperty("urlVal", datastoreJsonString);
+		  
+		    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		    datastore.put(urlEntity);   
+		    
+	    return name;
+	  }
+
+	  
   @RequestMapping("/saveurl")
   public ModelAndView doesthismethodnamematter() {
     return new ModelAndView("saveurl", "message", "");
@@ -51,20 +72,20 @@ public class SaveUrlController {
   }
    
   @RequestMapping(value = "/addUrl", method = RequestMethod.GET)
-  public @ResponseBody String getUrl(@RequestParam String urlVal) throws EntityNotFoundException {		
+  public @ResponseBody String getUrl(@RequestParam String urlVal, @RequestParam String date) throws EntityNotFoundException {		
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-    if(isFirst){
+    if(isDeleteDataBetweenRestarts){
     	Entity urlEntity = new Entity("json" , KEY_NAME);
     	urlEntity.setProperty("urlVal", datastoreJsonString);
     	datastore.put(urlEntity);   
-    	isFirst = false;
+    	isDeleteDataBetweenRestarts = false;
   }
   
     String currentJson = this.getUrlJson();
-    Container container = new Gson().fromJson(currentJson, Container.class);
-    UrlNodeDetails u = new UrlNodeDetails(urlVal , "");
-    container.nodes.add(u);
+    UrlNodes container = new Gson().fromJson(currentJson, UrlNodes.class);
+    UrlNodeDetails u = new UrlNodeDetails(urlVal , date);
+    container.getNodes().add(u);
 
     datastoreJsonString = new Text(new Gson().toJson(container));
     Entity urlEntity = new Entity("json" , KEY_NAME);
@@ -75,7 +96,7 @@ public class SaveUrlController {
     return urlVal;
   }
   
-  private String getUrlJson() throws EntityNotFoundException{
+ private String getUrlJson() throws EntityNotFoundException{
 	    Key key = KeyFactory.createKey("json", KEY_NAME);
 	    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	    

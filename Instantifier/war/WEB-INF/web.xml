@@ -17,5 +17,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
         <url-pattern>/</url-pattern>
 </servlet-mapping>
 
+    <servlet>
+        <servlet-name>deleterow</servlet-name>
+        <servlet-class>com.instantifier.servlets.DeleteRow</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>deleterow</servlet-name>
+        <url-pattern>/deleterow</url-pattern>
+    </servlet-mapping>
 	
 </web-app>

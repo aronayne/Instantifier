@@ -31,11 +31,8 @@
   -->
 
 <static-files>
-  <include path="/js/jquery-1.7.js" />
-    <include path="/js/jquery.tablesorter.pager.js" />
-  <include path="/js/jquery.tablesorter.min.js" />
-  <include path="/js/jquery.dataTables.js" />
    <include path="/css/**.css" />
+   <include path="/js/**.js" />
    <include path="/images/**.*" />
 </static-files>
     

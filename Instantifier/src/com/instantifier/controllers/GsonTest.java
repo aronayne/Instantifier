@@ -9,7 +9,7 @@ public class GsonTest {
 
 		String j = "{\"nodes\":[{\"url\":\"sadfas\",\"date\":\"\"}]}";
 		
-		Container container = new Gson().fromJson(j, Container.class);
+		UrlNodes container = new Gson().fromJson(j, UrlNodes.class);
 		
 	}
 }

@@ -26,5 +26,17 @@ public class UrlNodeDetails {
 	private String url;
     private String date;
     // +getters.
+    
+    public boolean equals(Object obj) {
+    	UrlNodeDetails urlNodeDetails = (UrlNodeDetails)obj;
+    	if(urlNodeDetails.getUrl().equalsIgnoreCase(this.url)){
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
+    }
+    
+    
 }
 
