@@ -3,6 +3,8 @@
 <head>
   <title>Instantifier</title>
   
+  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+  
   <style type="text/css">
 @import url("css/style.css");
 @import url("css/complete.css");
@@ -20,11 +22,19 @@
   $(document).ready(function() {
       
   	$('#urlDetailsTable').dataTable({
-          sPaginationType: "full_numbers"
+          sPaginationType: "full_numbers",
+          
+              "bInfo": false,  
+              "bFilter": true,
+              //change bAutoWidth to true 
+              "bAutoWidth": false
       }).makeEditable({
           sDeleteURL: "deleterow"
-      });    	  	  
-  		  	  
+
+      });    	  	 
+  	//urlDetailsTable_wrapper is the generated id which includes the paging options, just setting the .css on urlDetailsTable will just set the width of the main table 
+    $("#urlDetailsTable_wrapper").css("width","80%");
+  	
        $.ajax({
           url: 'getallurls',
           data: ({urlVal : $('#urlVal').val()}),
@@ -86,9 +96,9 @@
 	    var d = new Date();
 	    var month = d.getMonth()+1;
 	    var day = d.getDate();
-	    var formattedDate = d.getFullYear() + '/' +
+	    var formattedDate =  ((''+day).length<2 ? '0' : '') + day + '/' +
 	        ((''+month).length<2 ? '0' : '') + month + '/' +
-	        ((''+day).length<2 ? '0' : '') + day;
+	        d.getFullYear();
 	    
 	    return formattedDate;
   }

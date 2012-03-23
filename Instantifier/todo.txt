@@ -1,3 +1,5 @@
 Implement remove functionality - refer to http://code.google.com/p/jquery-datatables-editable/wiki/DeleteRecord
 
 Change table styling
+
+Possible change - when name/description is added, hide the URL & convert the added name to the href, so overall row should be shorter in width....
