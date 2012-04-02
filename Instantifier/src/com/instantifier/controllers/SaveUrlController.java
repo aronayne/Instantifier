@@ -34,6 +34,25 @@ public class SaveUrlController {
 	private Text datastoreJsonString = new Text("{ nodes:[ ] }");
 	private static final String KEY_NAME = "FSDFA3";
 	
+	  @RequestMapping(value = "/editData", method = RequestMethod.GET)
+	  public @ResponseBody String editData(@RequestParam String name) throws EntityNotFoundException {
+
+		    String currentJson = this.getUrlJson();
+		    UrlNodes container = new Gson().fromJson(currentJson, UrlNodes.class);
+		    
+		    UrlNodeDetails u = new UrlNodeDetails();
+		    u.setUrl(name);
+		    
+		    datastoreJsonString = new Text(new Gson().toJson(container));
+		    Entity urlEntity = new Entity("json" , KEY_NAME);
+		    urlEntity.setProperty("urlVal", datastoreJsonString);
+		  
+		    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		    datastore.put(urlEntity);   
+		    
+	    return name;
+	  }
+	  
 	  @RequestMapping(value = "/removeData", method = RequestMethod.GET)
 	  public @ResponseBody String getData(@RequestParam String name) throws EntityNotFoundException {
 
