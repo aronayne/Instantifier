@@ -1,3 +1,9 @@
+Truncate description URI row same as URI row
+
+Validation - do not add the same URL twice
+
+Date sorting is not working correctly ???????????
+
 Implement remove functionality - refer to http://code.google.com/p/jquery-datatables-editable/wiki/DeleteRecord
 
 Change table styling

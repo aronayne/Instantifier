@@ -18,26 +18,47 @@
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.editable.js"></script>
 <script type="text/javascript" src="js/jquery-ui.js"></script>
-<script type="text/javascript" src="js/custom-functions.js"></script> 
+<script type="text/javascript" src="js/custom-functions.js"></script>
 <script type="text/javascript" src="js/jquery.expander.js"></script>
 <script type="text/javascript" src="js/jquery.jtruncate.js"></script>
 
-  <script type="text/javascript">
+<script type="text/javascript">
+
+
 
   $(document).ready(function() {
   
-  	var oTable = $('#urlDetailsTable').dataTable({
+  	$('#urlDetailsTable').dataTable({
           sPaginationType: "full_numbers",
           
               "bInfo": false,  
               "bFilter": true,
               //change bAutoWidth to true 
-              "bAutoWidth": false
-      }).makeEditable({
-          sDeleteURL: "deleterow"
-      });    	  
+              "bAutoWidth": false,
+              "iDisplayLength": 300,
+              'aoColumns': [null, null, null, null, null, { "sType": "uk_date" }]
+      });   	  
 
-	
+/*   	jQuery.fn.dataTableExt.oSort['uk_date-asc']  = function(a,b) {
+  		var ukDatea = a.split('/');
+  		var ukDateb = b.split('/');
+  		
+  		var x = (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+  		var y = (ukDateb[2] + ukDateb[1] + ukDateb[0]) * 1;
+  		
+  		return ((x < y) ? -1 : ((x > y) ?  1 : 0));
+  	};
+
+  	jQuery.fn.dataTableExt.oSort['uk_date-desc'] = function(a,b) {
+  		var ukDatea = a.split('/');
+  		var ukDateb = b.split('/');
+  		
+  		var x = (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+  		var y = (ukDateb[2] + ukDateb[1] + ukDateb[0]) * 1;
+  		
+  		return ((x < y) ? 1 : ((x > y) ?  -1 : 0));
+  	}; */
+  	
   /*  "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
         var $cell=$('td:eq(0)', nRow);
         $cell.text(ellipsis($cell.text(),2));
@@ -47,74 +68,47 @@
   	//urlDetailsTable_wrapper is the generated id which includes the paging options, just setting the .css on urlDetailsTable will just set the width of the main table 
     $("#urlDetailsTable_wrapper").css("width","80%");
   	
+  	var number;
+  	
        $.ajax({
           url: 'getallurls',
           data: ({urlVal : $('#urlVal').val()}),
           success: function(data) {
-        	  
-
-        	  
           var jsonObj = jQuery.parseJSON(data);            
           for(var i=0;i<jsonObj.nodes.length;i++){
               var obj = jsonObj.nodes[i];
-              
-              var link = obj.url;
-              if(link.length > 20){
-            	  link = obj.url.substring(0 , 20);
-              }
 
-              var description = obj.url.substring(obj.url.substring.length-10 , obj.url.substring.length);
+              var description = obj.url;
+              if(description.length > 25){
+                  var description = obj.url.substring(obj.url.length-30);
+                  description = "... "+description;
+              }
+			number = i + 1;
       		$('#urlDetailsTable').dataTable().fnAddData( [
-      		
-	"<div id=dsd"+i+"><a href="+obj.url+" title="+obj.url+">"+link+"</a></div>",
+      		number,
+		"<div id=rowVal"+i+"><a href="+obj.url+" title="+obj.url+">"+obj.url+"</a></div>",
     		                             		    "",
     		                             		   description,
     		                             		    "",
     		                             		 	obj.date]
-    		                             		  );  
-      		
-/*            $("#dsd"+i).expander({
-           	  slicePoint: 2,
-           	  widow: 2,
-           	  expandEffect: 'show',
-           	  userCollapseText: '[^]'
-           	});  */
-            
-      /*		 $("#dsd"+i).jTruncate({  
-      	        length: 2,  
-      	        minTrail: 0,  
-      	        moreText: "[see all]",  
-      	        lessText: "[hide extra]",  
-      	        ellipsisText: " (truncated)",  
-      	        moreAni: "fast",  
-      	        lessAni: 20  
-      	    });  */
-      		 
+    		                             		  );     		 
           }
 
-          for(var i=0;i<jsonObj.nodes.length;i++){
-        // $("#dsd"+i).each(function(){
-
-        	  //  if("#dsd"+i).text().length > 10){
-        	               //alert($(this).html());
-        	               //($"#dsd"+i).html.text().substring(0 , 10);
-        	 //      }
-
-       // 	});​
+          //truncating the text after it has been added, this is a search can be performed on the entire URL, not just the truncated part
+          for(var i=0;i<jsonObj.nodes.length;i++){	  
+              var link = $("#rowVal"+i+" a").text();
+              if(link.length > 25){
+            	  link = link.substring(0 , 25)+" ...";
+              }
+			$("#rowVal"+i+" a").text(link);
           }
           
-         	$('#urlDetailsTable').dataTable().makeEditable({
+          	$('#urlDetailsTable').dataTable().makeEditable({
            		sUpdateURL: "editData"
-           		}); 
+           		});  
+         	
           }
-       
-     	
-
-   	
-        });
-       
-
-       
+        });      
   	});
  
     
@@ -141,6 +135,7 @@
 			class="pretty">
 			<thead>
 				<tr>
+					<th>#</th>
 					<th>URI</th>
 					<th>Name</th>
 					<th>Description</th>
@@ -153,6 +148,7 @@
 			</tbody>
 			<tfoot>
 				<tr>
+				<th>#</th>
 					<th>URI</th>
 					<th>Name</th>
 					<th>Description</th>
